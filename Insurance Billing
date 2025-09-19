@@ -21,7 +21,7 @@ VALUES
   , (390731, 'Insurance B', 80449, 'Glucose Tolerance Test', 150.00, 52.50, 0.00)
     ;
 
---SQL was used to query the Superstore database and find spacific information.
+--SQL was used to query the Insurance database and find spacific information.
 
 --Amount patients have not payed
 SELECT patient_id, procedure_bill-payment_received AS payment_remaining
