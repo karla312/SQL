@@ -1,0 +1,67 @@
+CREATE TABLE billing (
+    patient_id INTEGER
+  	, insurance_provider TEXT
+    , procedure_code INTEGER
+    , procedure_description TEXT
+    , procedure_cost REAL
+    , procedure_bill REAL
+    , payment_received REAL
+);
+
+
+INSERT INTO billing (patient_id, insurance_provider, procedure_code, procedure_description, procedure_cost, procedure_bill, payment_received)
+VALUES
+    (137845, 'Insurance A', 42213, 'Office Visit', 335.00, 83.75, 35.00)
+  , (187738, 'Insurance C', 85706, 'ECG', 425.00, 63.75, 50.00)
+  , (214007, 'Insurance A', 80048, 'Basic Metabolic Panel', 200.00, 50.00, 0.00)
+  , (250077, 'Insurance B', 80525, 'Complete Blood Count', 225.00, 78.75, 0.00)
+  , (281938, 'Insurance B', 80449, 'Glucose Tolerance Test', 150.00, 52.50, 15.00)
+  , (296309, 'Insurance C', 42213, 'Office Visit', 335.00, 50.25, 30.00)
+  , (301544, 'Insurance C', 80061, 'Lipid Panel', 135.00, 20.25, 20.25)
+  , (390731, 'Insurance B', 80449, 'Glucose Tolerance Test', 150.00, 52.50, 0.00)
+    ;
+
+--SQL was used to query the Superstore database and find spacific information.
+
+--Amount patients have not payed
+SELECT patient_id, procedure_bill-payment_received AS payment_remaining
+FROM billing
+;
+
+--Fraction of patient payment received
+SELECT patient_id
+, procedure_bill
+, payment_received/procedure_bill AS payment_fraction
+FROM billing
+ORDER BY payment_fraction
+;
+
+--Percent paid
+SELECT patient_id
+, procedure_bill
+, ROUND ((payment_received/procedure_bill) * 100, 1) AS payment_percent
+FROM billing
+;
+
+--Payment categories
+SELECT patient_id, payment_received/procedure_bill AS payment_fraction,
+CASE
+      WHEN (payment_received/procedure_bill) = 1 THEN 'Paid'
+    WHEN (payment_received/procedure_bill) = 0 THEN 'No payment'
+ELSE 'In progress'
+END AS 'payment_status'
+FROM billing
+;
+
+--Easy payment identifier
+SELECT patient_id, ROUND ((payment_received/procedure_bill) * 100, 1) AS payment_percent,
+CASE
+      WHEN (payment_received/procedure_bill) = 1 THEN 'Paid'
+    WHEN (payment_received/procedure_bill) >= .75 THEN '75%+'
+    WHEN (payment_received/procedure_bill) >= .50 THEN '50%+'
+    WHEN (payment_received/procedure_bill) >= .25 THEN '25%+'
+    WHEN (payment_received/procedure_bill) = 0 THEN 'No payment'
+ELSE 'Under 25%'
+END AS 'payment_status'
+FROM billing
+;
